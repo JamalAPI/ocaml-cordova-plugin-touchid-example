@@ -1,13 +1,9 @@
-let on_device_ready _ =
-  let t = Touchid.touchid () in
-  t##checkSupport
-  ( fun () ->
-      t##authenticate ( fun () -> () ) ( fun () -> () ) (Js.string "Hello
-      world");
-  )
-  ( fun err -> Dom_html.window##(alert err) );
-  Js._false
+let on_device_ready () =
+  let cb () = () in
+  let check_support_succ () =
+    Cordova_touchid.authenticate cb cb  "Hello world"
+  in
+  Cordova_touchid.check_support check_support_succ Jsoo_lib.alert
 
 let _ =
-  Dom.addEventListener Dom_html.document (Dom.Event.make "deviceready")
-  (Dom_html.handler on_device_ready) Js._false
+  Cordova.Event.device_ready on_device_ready
